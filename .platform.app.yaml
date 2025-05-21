@@ -39,7 +39,7 @@ mounts:
     "/var": { source: local, source_path: var }
 
 relationships:
-    database: "database:postgresql"
+    database: "postgresql:postgresql"
     
 hooks:
     build: |
