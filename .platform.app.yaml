@@ -50,10 +50,11 @@ hooks:
         # Install dependencies without dev packages
         composer install --no-dev --optimize-autoloader --no-scripts
         
+        # Remove debug configuration
+        rm -f config/packages/debug.yaml
+        
         # Copy production bundles
-        if [ -f "config/bundles.prod.php" ]; then
-            cp config/bundles.prod.php config/bundles.php
-        fi
+        cp config/bundles.prod.php config/bundles.php
         
         # Clear and warmup cache
         php bin/console cache:clear --no-debug --no-warmup
