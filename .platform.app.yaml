@@ -19,6 +19,7 @@ runtime:
 variables:
     php:
         opcache.preload: config/preload.php
+
 build:
     flavor: none
 
@@ -40,21 +41,13 @@ relationships:
     
 hooks:
     build: |
-        set -x -e
+        set -e
         composer install --no-dev --optimize-autoloader
+        APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear
+        APP_ENV=prod APP_DEBUG=0 php bin/console cache:warmup
     deploy: |
-        set -x -e
-        php bin/console doctrine:migrations:migrate --no-interaction
-        php bin/console cache:clear
-
-crons:
-    security-check:
-        # Check that no security issues have been found for PHP packages deployed in production
-        spec: '50 23 * * *'
-        cmd: if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then croncape COMPOSER_ROOT_VERSION=1.0.0 COMPOSER_AUDIT_ABANDONED=ignore composer audit --no-cache; fi
-    clean-expired-sessions:
-        spec: '17,47 * * * *'
-        cmd: croncape php-session-clean
+        set -e
+        APP_ENV=prod APP_DEBUG=0 php bin/console doctrine:migrations:migrate --no-interaction
 
 workers:
     messenger:
@@ -68,3 +61,12 @@ workers:
         commands:
             # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
             start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async
+
+crons:
+    security-check:
+        # Check that no security issues have been found for PHP packages deployed in production
+        spec: '50 23 * * *'
+        cmd: if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then croncape COMPOSER_ROOT_VERSION=1.0.0 COMPOSER_AUDIT_ABANDONED=ignore composer audit --no-cache; fi
+    clean-expired-sessions:
+        spec: '17,47 * * * *'
+        cmd: croncape php-session-clean
