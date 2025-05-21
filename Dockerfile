@@ -49,7 +49,7 @@ RUN composer dump-env prod
 # Clear and warm up cache
 RUN php bin/console cache:clear --no-warmup
 RUN php bin/console cache:warmup
-
+RUN php bin/console doctrine:migrations:migrate --no-interaction
 # Set permissions
 RUN chown -R www-data:www-data var
 
