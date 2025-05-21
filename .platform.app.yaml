@@ -8,7 +8,13 @@ dependencies:
 
 runtime:
     extensions:
-        
+        - apcu
+        - mbstring
+        - sodium
+        - ctype
+        - iconv
+        - pdo_pgsql
+        - pgsql
 
 variables:
     php:
@@ -27,7 +33,7 @@ web:
 
 mounts:
     "/var/cache": { source: local, source_path: var/cache }
-    
+    "/var": { source: local, source_path: var }
 
 relationships:
     database: "database:postgresql"
@@ -35,23 +41,11 @@ relationships:
 hooks:
     build: |
         set -x -e
-
-        curl -fs https://get.symfony.com/cloud/configurator | bash
-        # php-ext-install apcu X.Y.Z
-        # php-ext-install blackfire X.Y.Z
-        # php-ext-install ctype X.Y.Z
-        # php-ext-install iconv X.Y.Z
-        # php-ext-install mbstring X.Y.Z
-        # php-ext-install pdo_pgsql X.Y.Z
-        # php-ext-install sodium X.Y.Z
-        # php-ext-install xsl X.Y.Z
-        
-        NODE_VERSION=22 symfony-build
-
+        composer install --no-dev --optimize-autoloader
     deploy: |
         set -x -e
-
-        symfony-deploy
+        php bin/console doctrine:migrations:migrate --no-interaction
+        php bin/console cache:clear
 
 crons:
     security-check:

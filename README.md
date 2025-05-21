@@ -59,7 +59,7 @@ Response:
 ## Postman Collection
 
 A Postman collection is included for testing the API. Import the collection from the file:
-`public/webscraper-api.postman_collection.json`
+`postman/WebScraper_API.postman_collection.json`
 
 ## Architecture
 
