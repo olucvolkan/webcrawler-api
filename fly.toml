@@ -6,7 +6,6 @@ primary_region = "cdg"
 
 [env]
   APP_ENV = "prod"
-  PHP_FPM_DOCUMENT_ROOT = "/app/public"
 
 [[services]]
   processes = ["web"]
@@ -24,8 +23,9 @@ primary_region = "cdg"
   [[services.ports]]
     handlers = ["tls", "http"]
     port = 443
+
 [processes]
-  web = "heroku-php-apache2 public/"
+  web = "apache2-foreground"
   messenger = "php /app/bin/console messenger:consume async --time-limit=3600 --memory-limit=128M"
 
 [[vm]]
