@@ -149,6 +149,174 @@
 					"body": "{\n    \"status\": \"error\",\n    \"message\": \"Validation failed\",\n    \"errors\": {\n        \"url\": \"URL cannot be blank.\"\n    }\n}"
 				}
 			]
+		},
+		{
+			"name": "List Websites",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/websites?domain=example.com",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"websites"
+					],
+					"query": [
+						{
+							"key": "domain",
+							"value": "example.com",
+							"description": "Optional. Filter websites by domain name"
+						}
+					]
+				},
+				"description": "Retrieves a list of all crawled websites. Can be filtered by domain name."
+			},
+			"response": [
+				{
+					"name": "Successful Response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/websites",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"websites"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"message\": \"Websites retrieved successfully\",\n    \"data\": {\n        \"websites\": [\n            {\n                \"id\": 1,\n                \"url\": \"https://example.com\",\n                \"domain\": \"example.com\",\n                \"status\": \"completed\",\n                \"htmlTagCount\": 100,\n                \"requestDuration\": 1.5,\n                \"createdAt\": \"2024-05-05 12:00:00\",\n                \"updatedAt\": \"2024-05-05 12:00:00\"\n            }\n        ]\n    }\n}"
+				},
+				{
+					"name": "Invalid Domain Filter",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/websites?domain=invalid-domain",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"websites"
+							],
+							"query": [
+								{
+									"key": "domain",
+									"value": "invalid-domain"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"error\",\n    \"message\": \"Validation failed\",\n    \"errors\": {\n        \"domain\": \"Invalid domain format\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Show Website",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/websites/1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"websites",
+						"1"
+					]
+				},
+				"description": "Retrieves details of a specific website by its ID."
+			},
+			"response": [
+				{
+					"name": "Successful Response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/websites/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"websites",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"message\": \"Website retrieved successfully\",\n    \"data\": {\n        \"website\": {\n            \"id\": 1,\n            \"url\": \"https://example.com\",\n            \"domain\": \"example.com\",\n            \"status\": \"completed\",\n            \"htmlTagCount\": 100,\n            \"requestDuration\": 1.5,\n            \"createdAt\": \"2024-05-05 12:00:00\",\n            \"updatedAt\": \"2024-05-05 12:00:00\"\n        }\n    }\n}"
+				},
+				{
+					"name": "Not Found Response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/websites/99999",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"websites",
+								"99999"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"error\",\n    \"message\": \"Website not found\"\n}"
+				}
+			]
 		}
 	],
 	"event": [
