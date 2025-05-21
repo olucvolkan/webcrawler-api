@@ -1,5 +1,5 @@
 Symfony for Platform.sh
-=======================
+====================
 
 <p align="center">
 <a href="https://console.platform.sh/projects/create-project?template=https://raw.githubusercontent.com/symfonycorp/platformsh-symfony-template-metadata/main/sf7.2-php8.4-webapp.template.yaml&utm_content=symfonycorp&utm_source=github&utm_medium=button&utm_campaign=deploy_on_platform">
@@ -19,6 +19,8 @@ A Symfony-based API for crawling and analyzing websites.
 
 ## Setup
 
+### Local Development
+
 1. Clone this repository
 2. Install dependencies: `composer install`
 3. Configure your PostgreSQL database in the `.env` file:
@@ -28,6 +30,45 @@ A Symfony-based API for crawling and analyzing websites.
 4. Create the database schema: `php bin/console doctrine:migrations:migrate`
 5. Start the Symfony server: `symfony server:start`
 6. Start the messenger worker: `php bin/console messenger:consume async`
+
+### Deployment on Fly.io
+
+1. Install the Fly.io CLI:
+   ```bash
+   # For MacOS/Linux
+   curl -L https://fly.io/install.sh | sh
+   
+   # For Windows PowerShell
+   iwr https://fly.io/install.ps1 -useb | iex
+   ```
+
+2. Sign up and sign in:
+   ```bash
+   fly auth signup
+   # or
+   fly auth login
+   ```
+
+3. Deploy the application:
+   ```bash
+   fly launch
+   ```
+
+4. Set up a PostgreSQL database:
+   ```bash
+   fly postgres create --name webscraperapi-db
+   fly postgres attach --postgres-app webscraperapi-db
+   ```
+
+5. Run database migrations:
+   ```bash
+   fly ssh console -C "php /app/bin/console doctrine:migrations:migrate --no-interaction"
+   ```
+
+6. Deploy changes:
+   ```bash
+   fly deploy
+   ```
 
 ## API Endpoints
 
