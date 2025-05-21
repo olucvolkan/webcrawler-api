@@ -17,6 +17,8 @@ runtime:
         - pgsql
 
 variables:
+    env:
+        APP_ENV: 'prod'
     php:
         opcache.preload: config/preload.php
 
