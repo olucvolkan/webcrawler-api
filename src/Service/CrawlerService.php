@@ -35,7 +35,6 @@ class CrawlerService
         $parsedUrl = parse_url($url);
         $domain = $parsedUrl['host'] ?? '';
 
-        // Remove 'www.' if present
         if (substr($domain, 0, 4) === 'www.') {
             $domain = substr($domain, 4);
         }

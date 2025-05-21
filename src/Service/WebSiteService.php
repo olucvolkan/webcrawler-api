@@ -32,10 +32,12 @@ class WebSiteService
         $webSite->setDomain($domain);
         $webSite->setStatus('waiting');
 
+        // Save first to get an ID
         $this->webSiteRepository->save($webSite);
 
-        // Dispatch a message to process the website crawling
-        $this->messageBus->dispatch(new CrawlMessage($webSite->getId()));
+        if ($webSite->getId()) {
+            $this->messageBus->dispatch(new CrawlMessage($webSite->getId()));
+        }
 
         return $webSite;
     }

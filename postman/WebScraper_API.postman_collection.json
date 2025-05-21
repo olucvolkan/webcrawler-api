@@ -1,0 +1,181 @@
+{
+	"info": {
+		"_postman_id": "3e4b5f6a-7c8d-9e0f-1a2b-3c4d5e6f7g8h",
+		"name": "Web Scraper API",
+		"description": "A collection for testing the Web Scraper API endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Crawl Website",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"https://symfony.com\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/crawler/crawl",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"crawler",
+						"crawl"
+					]
+				},
+				"description": "Initiates crawling of a website and returns the ID of the created website entry."
+			},
+			"response": [
+				{
+					"name": "Successful Response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"url\": \"https://symfony.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/crawler/crawl",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"crawler",
+								"crawl"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"message\": \"We are crawling website now.\",\n    \"data\": {\n        \"id\": 1,\n        \"status\": \"waiting\"\n    }\n}"
+				},
+				{
+					"name": "Invalid URL",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"url\": \"not-a-valid-url\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/crawler/crawl",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"crawler",
+								"crawl"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"error\",\n    \"message\": \"Validation failed\",\n    \"errors\": {\n        \"url\": \"This value is not a valid URL.\"\n    }\n}"
+				},
+				{
+					"name": "Missing URL",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/crawler/crawl",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"crawler",
+								"crawl"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"error\",\n    \"message\": \"Validation failed\",\n    \"errors\": {\n        \"url\": \"URL cannot be blank.\"\n    }\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		}
+	]
+} 

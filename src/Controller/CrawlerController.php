@@ -15,7 +15,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route('/api/crawler', name: 'api_crawler_')]
 class CrawlerController extends AbstractController
 {
-    private SerializerInterface $serializer;
     private ValidatorInterface $validator;
     private WebSiteService $webSiteService;
     private ResponseFormatter $responseFormatter;

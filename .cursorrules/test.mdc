@@ -1,0 +1,17 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: When you write a test firstly check this standarts
+---
+
+- You will use PHPUnit
+- Write test for [WebSiteService.php](mdc:src/Service/WebSiteService.php) and [CrawlerService.php](mdc:src/Service/CrawlerService.php)
+- Write test for [CrawlMessageHandler.php](mdc:src/MessageHandler/CrawlMessageHandler.php) 
+- Dont mock anything. Use real database.
+- Write test for [CrawlerController.php](mdc:src/Controller/CrawlerController.php) 
+   - Send request and assert response. You will write e2e test.
+- Each test responsible from myself. When you update or insert record. When test finish rollback changes.
+
