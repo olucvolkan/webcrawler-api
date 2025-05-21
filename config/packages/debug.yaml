@@ -1,4 +1,0 @@
-when@dev:
-    debug:
-        # Forwards VarDumper Data clones to a centralized server allowing to inspect dumps on CLI or in your browser.
-        dump_destination: "tcp://%env(VAR_DUMPER_SERVER)%" 
