@@ -42,12 +42,29 @@ relationships:
 hooks:
     build: |
         set -e
-        composer install --no-dev --optimize-autoloader
-        APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear
-        APP_ENV=prod APP_DEBUG=0 php bin/console cache:warmup
+        # Ensure we're in production mode
+        export APP_ENV=prod
+        export APP_DEBUG=0
+        export SYMFONY_ENV=prod
+
+        # Install dependencies without dev packages
+        composer install --no-dev --optimize-autoloader --no-scripts
+        
+        # Copy production bundles
+        if [ -f "config/bundles.prod.php" ]; then
+            cp config/bundles.prod.php config/bundles.php
+        fi
+        
+        # Clear and warmup cache
+        php bin/console cache:clear --no-debug --no-warmup
+        php bin/console cache:warmup --no-debug
+
     deploy: |
         set -e
-        APP_ENV=prod APP_DEBUG=0 php bin/console doctrine:migrations:migrate --no-interaction
+        export APP_ENV=prod
+        export APP_DEBUG=0
+        export SYMFONY_ENV=prod
+        php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 
 workers:
     messenger:
