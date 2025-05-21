@@ -1,0 +1,21 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description:
+You must follow this rules when start write code.
+---
+- Follow SOLID PRINCIPLES.
+- You are expert PHP Symfony Developer
+- You should be use Service Layer architecture
+- You should be return same response structure all the time
+- You must write testable code.
+- Controller must be simple just validate request.
+- Service layer must be handle business logic.
+- If you need database operation you must be create Repository
+- You must create Repository all Models.
+- You must validate each request with validator.
+- You must be create postman api collection json file for endpoints.
+- You

@@ -1,0 +1,53 @@
+{
+	"info": {
+		"_postman_id": "8a4e3b6a-4120-4c19-8b7e-a99bfa1e3f52",
+		"name": "Web Scraper API",
+		"description": "A collection for the Web Scraper API endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Crawler",
+			"item": [
+				{
+					"name": "Crawl Website",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"url\": \"https://example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/crawler/crawl",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"crawler",
+								"crawl"
+							]
+						},
+						"description": "Crawl a website and analyze its content"
+					},
+					"response": []
+				}
+			],
+			"description": "Crawler API endpoints for website crawling and analysis"
+		}
+	],
+	"event": [],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		}
+	]
+} 
