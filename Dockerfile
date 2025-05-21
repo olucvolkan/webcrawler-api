@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -24,15 +24,24 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /app
 
-# Copy project files
-COPY . /app/
+# Copy composer files first for better caching
+COPY composer.json composer.lock ./
 
 # Set environment variables
 ENV APP_ENV=prod
 ENV APP_DEBUG=0
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV DATABASE_URL="postgresql://postgres:${POSTGRES_PASSWORD}@webscraper-case-db.internal:5432/postgres?serverVersion=16&charset=utf8"
+
+# Install Symfony Flex
+RUN composer global config --no-plugins allow-plugins.symfony/flex true
+RUN composer global require "symfony/flex" --prefer-dist --no-progress --no-suggest --classmap-authoritative
 
 # Install dependencies
 RUN composer install --prefer-dist --no-dev --optimize-autoloader --no-scripts
+
+# Copy rest of the application
+COPY . .
 
 # Generate optimized Symfony configuration
 RUN composer dump-env prod
