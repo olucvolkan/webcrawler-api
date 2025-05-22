@@ -67,9 +67,11 @@ RUN rm /etc/nginx/sites-enabled/default
 # Expose port 8080
 EXPOSE 8080
 
-# Copy entrypoint script
+# Copy entrypoint scripts
 COPY docker/entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh
+COPY docker/worker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh \
+    && chmod +x /usr/local/bin/worker-entrypoint.sh
 
 # Start with entrypoint script
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

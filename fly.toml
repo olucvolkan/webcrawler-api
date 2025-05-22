@@ -18,7 +18,7 @@ primary_region = 'cdg'
 
 [processes]
   app = "/usr/local/bin/entrypoint.sh sh -c 'nginx && php-fpm'"
-  worker = "php bin/console messenger:consume async  --memory-limit=256M --limit=1000"
+  worker = "/usr/local/bin/entrypoint.sh php bin/console messenger:consume async --time-limit=3600 --memory-limit=256M --limit=1000 --failure-limit=5 --no-debug"
 
 [[vm]]
   memory = '1gb'
