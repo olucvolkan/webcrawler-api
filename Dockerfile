@@ -1,4 +1,4 @@
-FROM php:8.4-apache
+FROM php:8.4-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     libzip-dev \
     libonig-dev \
+    nginx \
     && docker-php-ext-install \
     pdo \
     pdo_pgsql \
@@ -15,8 +16,12 @@ RUN apt-get update && apt-get install -y \
     zip \
     opcache
 
-# Enable Apache modules
-RUN a2enmod rewrite
+# Create directories for PHP
+RUN mkdir -p /var/lib/php/sessions \
+    && mkdir -p /var/lib/php/wsdlcache \
+    && chown -R www-data:www-data /var/lib/php
+
+COPY docker/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -29,9 +34,8 @@ COPY composer.json composer.lock ./
 
 # Set environment variables
 ENV APP_ENV=prod
-ENV APP_DEBUG=0
+ENV APP_DEBUG=1
 ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV DATABASE_URL="postgresql://postgres:${POSTGRES_PASSWORD}@webscraper-case-db.internal:5432/postgres?serverVersion=16&charset=utf8"
 
 # Install Symfony Flex
 RUN composer global config --no-plugins allow-plugins.symfony/flex true
@@ -49,25 +53,24 @@ RUN composer dump-env prod
 # Clear and warm up cache
 RUN php bin/console cache:clear --no-warmup
 RUN php bin/console cache:warmup
-RUN php bin/console doctrine:migrations:migrate --no-interaction
-# Set permissions
-RUN chown -R www-data:www-data var
 
-# Configure Apache
-RUN echo 'ServerName localhost' >> /etc/apache2/apache2.conf
-COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
+# Ensure proper permissions and directory structure
+RUN mkdir -p public \
+    && chown -R www-data:www-data . \
+    && chmod -R 777 var \
+    && chmod -R 777 public
 
-# Update apache configuration
-RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
-RUN sed -i 's/*:80/*:8080/g' /etc/apache2/sites-available/000-default.conf
-
-# Set the document root to public directory
-ENV APACHE_DOCUMENT_ROOT /app/public
-RUN sed -i -e 's|/var/www/html|${APACHE_DOCUMENT_ROOT}|g' /etc/apache2/sites-available/000-default.conf
-RUN sed -i -e 's|/var/www/|${APACHE_DOCUMENT_ROOT}|g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+# Configure Nginx
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+RUN rm /etc/nginx/sites-enabled/default
 
 # Expose port 8080
 EXPOSE 8080
 
-# Start Apache
-CMD ["apache2-foreground"]
+# Copy entrypoint script
+COPY docker/entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Start with entrypoint script
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]

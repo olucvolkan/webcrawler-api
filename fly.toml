@@ -1,45 +1,33 @@
-app = "webscraper-api"
-primary_region = "cdg"
+# fly.toml app configuration file generated for webscraper-api on 2025-05-22T00:34:56+01:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'weathered-glitter-9529'
+primary_region = 'cdg'
 
 [build]
-  dockerfile = "Dockerfile"
 
-[env]
-  APP_ENV = "prod"
-
-[[services]]
-  processes = ["web"]
+[http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = true
+  auto_stop_machines = 'stop'
   auto_start_machines = true
-  min_machines_running = 1
-
-  [[services.ports]]
-    handlers = ["http"]
-    port = 80
-    force_https = true
-
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
+  min_machines_running = 0
+  processes = ['app']
 
 [processes]
-  web = "apache2-foreground"
-  messenger = "php /app/bin/console messenger:consume async --time-limit=3600 --memory-limit=128M"
+  app = "/usr/local/bin/entrypoint.sh sh -c 'nginx && php-fpm'"
+  worker = "php bin/console messenger:consume async --time-limit=3600 --memory-limit=256M --limit=1000"
 
 [[vm]]
-  memory = "1gb"
-  cpu_kind = "shared"
+  memory = '1gb'
+  cpu_kind = 'shared'
   cpus = 1
+  processes = ['app']
 
-[[services]]
-  processes = ["messenger"]
-  internal_port = 8081
-  auto_stop_machines = true
-  auto_start_machines = true
-  min_machines_running = 1
-
-  [[services.ports]]
-    port = 5000
-    protocol = "tcp"
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1
+  processes = ['worker']
