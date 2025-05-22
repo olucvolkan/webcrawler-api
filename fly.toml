@@ -1,10 +1,12 @@
-# fly.toml app configuration file generated for webscraper-api on 2025-05-21T23:22:33+01:00
+# fly.toml app configuration file generated for webscraper-api on 2025-05-22T00:34:56+01:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'webscraper-api'
+app = 'weathered-glitter-9529'
 primary_region = 'cdg'
+
+[build]
 
 [http_service]
   internal_port = 8080
@@ -14,7 +16,18 @@ primary_region = 'cdg'
   min_machines_running = 0
   processes = ['app']
 
+[processes]
+  app = "/usr/local/bin/entrypoint.sh sh -c 'nginx && php-fpm'"
+  worker = "/usr/local/bin/entrypoint.sh php bin/console messenger:consume async --time-limit=3600 --memory-limit=256M --limit=1000 --failure-limit=5 --no-debug"
+
 [[vm]]
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+  processes = ['app']
+
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1
+  processes = ['worker']

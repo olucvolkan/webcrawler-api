@@ -342,7 +342,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://localhost:8000",
+			"value": "https://weathered-glitter-9529.fly.dev",
 			"type": "string"
 		}
 	]
