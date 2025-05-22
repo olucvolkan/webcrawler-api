@@ -1,0 +1,14 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description:
+Solve cors problem with frontend backend connection
+---
+Frontend url: 
+https://webscraper-ui.vercel.app/
+localhost:3000
+
+- Those urls should be call our api. Define CORS configuration
